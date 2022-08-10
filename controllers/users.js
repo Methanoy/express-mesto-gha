@@ -4,11 +4,16 @@ const createUser = (req, res) => {
   User
     .create(req.body)
     .then((user) => res.status(201).send(user))
-    .catch((err) => res.status(500).send({ message: `Error user creating ${err}` }));
+    .catch((err) => res.status(500).send({ message: `Error creating user ${err}` }));
 };
 
-// const getUser = (req, res) => {};
+const getUser = (req, res) => {
+  User
+    .findById(req.params._id)
+    .then((user) => res.status(201).send(user))
+    .catch((err) => res.status(500).send({ message: `Error getting user ${err}` }));
+};
 
 // const getAllUsers = (req, res) => {};
 
-module.exports = { createUser };
+module.exports = { createUser, getUser };
