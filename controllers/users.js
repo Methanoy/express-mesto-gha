@@ -14,6 +14,11 @@ const getUser = (req, res) => {
     .catch((err) => res.status(500).send({ message: `Error getting user ${err}` }));
 };
 
-// const getAllUsers = (req, res) => {};
+const getAllUsers = (req, res) => {
+  User
+    .find({})
+    .then((user) => res.status(201).send(user))
+    .catch((err) => res.status(500).send({ message: `Error getting user ${err}` }));
+};
 
-module.exports = { createUser, getUser };
+module.exports = { createUser, getUser, getAllUsers };
