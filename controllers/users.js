@@ -7,18 +7,18 @@ const createUser = (req, res) => {
     .catch((err) => res.status(500).send({ message: `Error creating user ${err}` }));
 };
 
-const getUser = (req, res) => {
+const getUserById = (req, res) => {
   User
-    .findById(req.params._id)
+    .findById(req.params.id)
     .then((user) => res.status(201).send(user))
     .catch((err) => res.status(500).send({ message: `Error getting user ${err}` }));
 };
 
 const getAllUsers = (req, res) => {
   User
-    .find({})
+    .find()
     .then((user) => res.status(201).send(user))
     .catch((err) => res.status(500).send({ message: `Error getting user ${err}` }));
 };
 
-module.exports = { createUser, getUser, getAllUsers };
+module.exports = { createUser, getUserById, getAllUsers };
