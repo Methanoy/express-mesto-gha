@@ -12,6 +12,14 @@ app.use(express.json());
 
 app.use('/users', router);
 
+app.use((req, res, next) => {
+  req.user = {
+    _id: '62f40a728f9616015d6614e0',
+  };
+
+  next();
+});
+
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
