@@ -19,6 +19,9 @@ const cardSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  likes: {
+    type: Object,
+  },
 });
 
 module.exports = mongoose.model('Card', cardSchema);

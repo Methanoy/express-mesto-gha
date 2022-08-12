@@ -23,4 +23,20 @@ const getAllCards = (req, res) => {
     .catch((err) => res.status(500).send({ message: `Error getting cards ${err}` }));
 };
 
-module.exports = { createCard, deleteCard, getAllCards };
+const likeCard = (req, res) => {
+  Card
+    .findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+    .then((cards) => res.status(201).send(cards))
+    .catch((err) => res.status(500).send({ message: `Error liking card ${err}` }));
+};
+
+const dislikeCard = (req, res) => {
+  Card
+    .findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
+    .then((cards) => res.status(201).send(cards))
+    .catch((err) => res.status(500).send({ message: `Error disliking card ${err}` }));
+};
+
+module.exports = {
+  createCard, deleteCard, getAllCards, likeCard, dislikeCard,
+};
