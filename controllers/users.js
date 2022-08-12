@@ -19,7 +19,7 @@ const getUserById = (req, res) => {
 const getAllUsers = (req, res) => {
   User
     .find()
-    .then((user) => res.status(201).send(user))
+    .then((users) => res.status(201).send(users))
     .catch((err) => res.status(500).send({ message: `Error getting users ${err}` }));
 };
 
