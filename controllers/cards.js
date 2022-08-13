@@ -4,8 +4,8 @@ const createCard = (req, res) => {
   const { name, link } = req.body;
   Card
     .create({ name, link, owner: req.user._id })
-    .then((card) => res.status(201).send(card))
-    .catch((err) => res.status(500).send({ message: `Error creating card ${err}` }));
+    .then((card) => res.status(200).send(card))
+    .catch((err) => res.status(500).send({ message: `Error creating a card ${err}` }));
 };
 
 const deleteCard = (req, res) => {
@@ -13,7 +13,7 @@ const deleteCard = (req, res) => {
   Card
     .findByIdAndRemove(cardId)
     .then((card) => res.status(201).send(card))
-    .catch((err) => res.status(500).send({ message: `Error deleting an card ${err}` }));
+    .catch((err) => res.status(500).send({ message: `Error deleting a card ${err}` }));
 };
 
 const getAllCards = (req, res) => {
@@ -26,14 +26,14 @@ const getAllCards = (req, res) => {
 const likeCard = (req, res) => {
   Card
     .findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
-    .then((cards) => res.status(201).send(cards))
+    .then((card) => res.status(201).send(card))
     .catch((err) => res.status(500).send({ message: `Error liking card ${err}` }));
 };
 
 const dislikeCard = (req, res) => {
   Card
     .findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
-    .then((cards) => res.status(201).send(cards))
+    .then((card) => res.status(201).send(card))
     .catch((err) => res.status(500).send({ message: `Error disliking card ${err}` }));
 };
 
