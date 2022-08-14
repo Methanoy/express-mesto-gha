@@ -26,89 +26,95 @@ const createCard = async (req, res) => {
   }
 };
 
-const deleteCard = async (req, res) => {
-  try {
-    const card = await Card.findByIdAndRemove(req.params.cardId);
-    if (!card) {
-      throw new NotFoundError('Карточка с указанным _id не найдена.');
-    }
-    res.status(200).send(card);
-  } catch (err) {
-    if (err.name === 'NotFoundError') {
-      res.status(err.codeStatus).send({ message: err.message });
-      return;
-    }
-    if (err) {
-      res.status(500).send({ message: `Ошибка сервера при создании карточки: ${err.message}` });
-      return;
-    }
-  }
+const deleteCard = (req, res) => {
+  Card
+    .findByIdAndRemove(req.params.cardId)
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Карточка с указанным _id не найдена.');
+      }
+      res.status(200).send(card);
+    })
+    .catch((err) => {
+      if (err instanceof NotFoundError) {
+        res.status(err.codeStatus).send({ message: err.message });
+        return;
+      }
+      if (err) {
+        res.status(500).send({ message: `Ошибка сервера при получении карточек: ${err.message}` });
+        return;
+      }
+    });
 };
 
-const getAllCards = async (req, res) => {
-  try {
-    const cards = await Card.find();
-    res.status(200).send(cards);
-  } catch (err) {
-    if (err instanceof ServerError) {
-      res.status(err.codeStatus).send({ message: err.message });
-      return;
-    }
-    if (err) {
-      res.status(500).send({ message: `Ошибка сервера при получении карточек: ${err.message}` });
-      return;
-    }
-  }
+const getAllCards = (req, res) => {
+  Card
+    .find()
+    .then((cards) => res.status(200).send(cards))
+    .catch((err) => {
+      if (err instanceof ServerError) {
+        res.status(err.codeStatus).send({ message: err.message });
+        return;
+      }
+      if (err) {
+        res.status(500).send({ message: `Ошибка сервера при получении карточек: ${err.message}` });
+        return;
+      }
+    });
 };
 
-const likeCard = async (req, res) => {
-  try {
-    const card = await Card.findByIdAndUpdate(req.params.cardId, {
+const likeCard = (req, res) => {
+  Card
+    .findByIdAndUpdate(req.params.cardId, {
       $addToSet: { likes: req.user._id },
-    }, { new: true });
-    if (!card) {
-      throw new NotFoundError('Карточка с указанным _id не найдена.');
-    }
-    res.status(200).send(card);
-  } catch (err) {
-    if (err instanceof NotFoundError) {
-      res.status(err.codeStatus).send({ message: err.message });
-      return;
-    }
-    if (err instanceof BadRequestError) {
-      res.status(err.codeStatus).send({ message: err.message });
-      return;
-    }
-    if (err) {
-      res.status(500).send({ message: `Ошибка сервера при добавлении лайка карточке: ${err.message}` });
-      return;
-    }
-  }
+    }, { new: true })
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Карточка с указанным _id не найдена.');
+      }
+      res.status(200).send(card);
+    })
+    .catch((err) => {
+      if (err instanceof NotFoundError) {
+        res.status(err.codeStatus).send({ message: err.message });
+        return;
+      }
+      if (err instanceof BadRequestError) {
+        res.status(err.codeStatus).send({ message: err.message });
+        return;
+      }
+      if (err) {
+        res.status(500).send({ message: `Ошибка сервера при добавлении лайка карточке: ${err.message}` });
+        return;
+      }
+    });
 };
 
-const dislikeCard = async (req, res) => {
-  try {
-    const card = await Card.findByIdAndUpdate(req.params.cardId, {
+const dislikeCard = (req, res) => {
+  Card
+    .findByIdAndUpdate(req.params.cardId, {
       $pull: { likes: req.user._id },
-    }, { new: true });
-    if (!card) {
-      throw new NotFoundError('Карточка с указанным _id не найдена.');
-    }
-    res.status(200).send(card);
-  } catch (err) {
-    if (err instanceof NotFoundError) {
-      res.status(err.codeStatus).send({ message: err.message });
-      return;
-    }
-    if (err instanceof BadRequestError) {
-      res.status(err.codeStatus).send({ message: err.message });
-      return;
-    }
-    if (err) {
-      res.status(500).send({ message: `Ошибка сервера при удалении лайка карточки: ${err.message}` });
-      return;
-    }
-  }
+    }, { new: true })
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Карточка с указанным _id не найдена.');
+      }
+      res.status(200).send(card);
+    })
+    .catch((err) => {
+      if (err instanceof NotFoundError) {
+        res.status(err.codeStatus).send({ message: err.message });
+        return;
+      }
+      if (err instanceof BadRequestError) {
+        res.status(err.codeStatus).send({ message: err.message });
+        return;
+      }
+      if (err) {
+        res.status(500).send({ message: `Ошибка сервера при удалении лайка карточки: ${err.message}` });
+        return;
+      }
+    });
 };
 
 module.exports = {
