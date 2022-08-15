@@ -1,52 +1,44 @@
 const User = require('../models/user');
-const BadRequestError = require('../errors/BadRequestError');
-const ServerError = require('../errors/ServerError');
 const NotFoundError = require('../errors/NotFoundError');
 
-const createUser = async (req, res) => {
-  try {
-    const { name, about, avatar } = req.body;
-    if (!name) {
-      throw new BadRequestError('Переданы некорректные данные при создании пользователя в строке: name');
-    }
-    if (!about) {
-      throw new BadRequestError('Переданы некорректные данные при создании пользователя в строке: about');
-    }
-    if (!avatar) {
-      throw new BadRequestError('Переданы некорректные данные при создании пользователя в строке: avatar');
-    }
-    const user = await User.create({ name, about, avatar });
-    res.status(200).send(user);
-  } catch (err) {
-    if (err instanceof BadRequestError) {
-      res.status(err.codeStatus).send({ message: err.message });
-      return;
-    }
-    if (err) {
-      res.status(500).send({ message: `Ошибка сервера при создании пользователя: ${err.message}` });
-      return;
-    }
-  }
-};
-
-const getUserById = (req, res) => {
-  const { userId } = req.params;
+const createUser = (req, res) => {
+  const { name, about, avatar } = req.body;
   User
-    .findById(userId)
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь по указанному _id не найден.');
-      }
-      res.status(200).send(user);
-    })
+    .create({ name, about, avatar })
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
-      if (err instanceof NotFoundError) {
-        res.status(err.codeStatus).send({ message: err.message });
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: `Переданы некорректные данные при создании пользователя. ${err.message}` });
         return;
       }
       if (err) {
-        res.status(500).send({ message: `Ошибка сервера при поиске пользователя по _id: ${err.message}` });
+        res.status(500).send({ message: `Ошибка при создании пользователя: ${err.message}` });
         return;
+      }
+    });
+};
+
+const getUserById = (req, res) => {
+  User
+    .findById(req.params.userId)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь по указанному _id не найден.');
+      } else {
+        res.status(200).send(user);
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'NotFoundError') {
+        res.status(err.codeStatus).send({ message: err.message });
+        return;
+      }
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: `Переданы некорректные данные при поиске пользователя по _id: ${err.message}` });
+        return;
+      }
+      if (err) {
+        res.status(500).send({ message: `Ошибка сервера при поиске пользователя: ${err.message}` });
       }
     });
 };
@@ -56,7 +48,7 @@ const getAllUsers = (req, res) => {
     .find()
     .then((users) => res.status(200).send(users))
     .catch((err) => {
-      if (err instanceof ServerError) {
+      if (err.name === 'ServerError') {
         res.status(err.codeStatus).send({ message: err.message });
         return;
       }
@@ -80,12 +72,12 @@ const updateUserProfile = (req, res) => {
       res.status(200).send({ data: userData });
     })
     .catch((err) => {
-      if (err instanceof NotFoundError) {
+      if (err.name === 'NotFoundError') {
         res.status(err.codeStatus).send({ message: err.message });
         return;
       }
-      if (err instanceof BadRequestError) {
-        res.status(err.codeStatus).send({ message: err.message });
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
         return;
       }
       if (err) {
@@ -108,12 +100,12 @@ const updateUserAvatar = (req, res) => {
       res.status(200).send({ data: userData });
     })
     .catch((err) => {
-      if (err instanceof NotFoundError) {
+      if (err.name === 'NotFoundError') {
         res.status(err.codeStatus).send({ message: err.message });
         return;
       }
-      if (err instanceof BadRequestError) {
-        res.status(err.codeStatus).send({ message: err.message });
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
         return;
       }
       if (err) {
