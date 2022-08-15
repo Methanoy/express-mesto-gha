@@ -18,9 +18,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/', (req, res) => res.status(404).send({ message: 'Указан неправильный путь.' }));
 app.use('/users', userRouter);
 app.use('/cards', cardsRouter);
+app.use('*', (req, res) => res.status(404).send({ message: 'Указан неправильный путь.' }));
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
