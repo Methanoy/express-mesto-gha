@@ -9,9 +9,9 @@ const createUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: `Переданы некорректные данные при создании пользователя. ${err.message}` });
-        return;
+      } else {
+        res.status(500).send({ message: `Ошибка при создании пользователя. ${err.message}` });
       }
-      res.status(500).send({ message: `Ошибка при создании пользователя. ${err.message}` });
     });
 };
 
@@ -28,13 +28,11 @@ const getUserById = (req, res) => {
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         res.status(err.codeStatus).send({ message: err.message });
-        return;
-      }
-      if (err.name === 'CastError') {
+      } else if (err.name === 'CastError') {
         res.status(400).send({ message: `Переданы некорректные данные при поиске пользователя по _id. ${err.message}` });
-        return;
+      } else {
+        res.status(500).send({ message: `Ошибка сервера при поиске пользователя. ${err.message}` });
       }
-      res.status(500).send({ message: `Ошибка сервера при поиске пользователя. ${err.message}` });
     });
 };
 
@@ -45,9 +43,9 @@ const getAllUsers = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: `Переданы некорректные данные при получении списка пользователей: ${err.message}` });
-        return;
+      } else {
+        res.status(500).send({ message: `Ошибка сервера при получении списка пользователей. ${err.message}` });
       }
-      res.status(500).send({ message: `Ошибка сервера при получении списка пользователей. ${err.message}` });
     });
 };
 
@@ -55,24 +53,23 @@ const updateUserProfile = (req, res) => {
   const { name, about } = req.body;
   User
     .findByIdAndUpdate(req.user._id, { name, about }, {
-      new: true, runValidators: true, upsert: true,
+      new: true, runValidators: true,
     })
     .then((userData) => {
       if (!userData) {
         throw new NotFoundError('Пользователь с указанным _id не найден.');
+      } else {
+        res.status(200).send({ data: userData });
       }
-      res.status(200).send({ data: userData });
     })
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         res.status(err.codeStatus).send({ message: err.message });
-        return;
-      }
-      if (err.name === 'ValidationError') {
+      } else if (err.name === 'ValidationError') {
         res.status(400).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
-        return;
+      } else {
+        res.status(500).send({ message: `Ошибка обновления данных профиля. ${err.message}` });
       }
-      res.status(500).send({ message: `Ошибка обновления данных профиля. ${err.message}` });
     });
 };
 
@@ -80,24 +77,23 @@ const updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
   User
     .findByIdAndUpdate(req.user._id, { avatar }, {
-      new: true, runValidators: true, upsert: true,
+      new: true, runValidators: true,
     })
     .then((userData) => {
       if (!userData) {
         throw new NotFoundError('Пользователь с указанным _id не найден.');
+      } else {
+        res.status(200).send({ data: userData });
       }
-      res.status(200).send({ data: userData });
     })
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         res.status(err.codeStatus).send({ message: err.message });
-        return;
-      }
-      if (err.name === 'CastError') {
+      } else if (err.name === 'CastError') {
         res.status(400).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
-        return;
+      } else {
+        res.status(500).send({ message: `Ошибка сервера при обновлении аватара пользователя. ${err.message}` });
       }
-      res.status(500).send({ message: `Ошибка сервера при обновлении аватара пользователя. ${err.message}` });
     });
 };
 
