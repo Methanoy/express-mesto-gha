@@ -67,6 +67,8 @@ const updateUserProfile = (req, res) => {
         res.status(err.codeStatus).send({ message: err.message });
       } else if (err.name === 'ValidationError') {
         res.status(400).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
+      } else if (err.name === 'CastError') {
+        res.status(400).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
       } else {
         res.status(500).send({ message: `Ошибка обновления данных профиля. ${err.message}` });
       }
@@ -89,6 +91,8 @@ const updateUserAvatar = (req, res) => {
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         res.status(err.codeStatus).send({ message: err.message });
+      } else if (err.name === 'ValidationError') {
+        res.status(400).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
       } else if (err.name === 'CastError') {
         res.status(400).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
       } else {
