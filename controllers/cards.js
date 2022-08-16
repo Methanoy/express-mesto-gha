@@ -11,10 +11,7 @@ const createCard = (req, res) => {
         res.status(400).send({ message: `Переданы некорректные данные при создании карточки. ${err.message}` });
         return;
       }
-      if (err) {
-        res.status(500).send({ message: `Ошибка сервера при создании карточки: ${err.message}` });
-        return;
-      }
+      res.status(500).send({ message: `Ошибка сервера при создании карточки: ${err.message}` });
     });
 };
 
@@ -36,10 +33,7 @@ const deleteCard = (req, res) => {
         res.status(400).send({ message: `Переданы некорректные данные при удалении карточки. ${err.message}` });
         return;
       }
-      if (err) {
-        res.status(500).send({ message: `Ошибка сервера при удалении карточки: ${err.message}` });
-        return;
-      }
+      res.status(500).send({ message: `Ошибка сервера при удалении карточки: ${err.message}` });
     });
 };
 
@@ -52,10 +46,7 @@ const getAllCards = (req, res) => {
         res.status(err.codeStatus).send({ message: err.message });
         return;
       }
-      if (err) {
-        res.status(500).send({ message: `Ошибка сервера при получении карточек: ${err.message}` });
-        return;
-      }
+      res.status(500).send({ message: `Ошибка сервера при получении карточек: ${err.message}` });
     });
 };
 
@@ -79,10 +70,7 @@ const likeCard = (req, res) => {
         res.status(400).send({ message: `Переданы некорректные данные при добавлении лайка. ${err.message}` });
         return;
       }
-      if (err) {
-        res.status(500).send({ message: `Ошибка сервера при добавлении лайка карточке: ${err.message}` });
-        return;
-      }
+      res.status(500).send({ message: `Ошибка сервера при добавлении лайка карточке: ${err.message}` });
     });
 };
 
@@ -106,10 +94,7 @@ const dislikeCard = (req, res) => {
         res.status(400).send({ message: `Переданы некорректные данные при удалении лайка. ${err.message}` });
         return;
       }
-      if (err) {
-        res.status(500).send({ message: `Ошибка сервера при удалении лайка карточки: ${err.message}` });
-        return;
-      }
+      res.status(500).send({ message: `Ошибка сервера при удалении лайка карточки: ${err.message}` });
     });
 };
 

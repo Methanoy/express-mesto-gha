@@ -11,10 +11,7 @@ const createUser = (req, res) => {
         res.status(400).send({ message: `Переданы некорректные данные при создании пользователя. ${err.message}` });
         return;
       }
-      if (err) {
-        res.status(500).send({ message: `Ошибка при создании пользователя: ${err.message}` });
-        return;
-      }
+      res.status(500).send({ message: `Ошибка при создании пользователя: ${err.message}` });
     });
 };
 
@@ -37,9 +34,7 @@ const getUserById = (req, res) => {
         res.status(400).send({ message: `Переданы некорректные данные при поиске пользователя по _id: ${err.message}` });
         return;
       }
-      if (err) {
-        res.status(500).send({ message: `Ошибка сервера при поиске пользователя: ${err.message}` });
-      }
+      res.status(500).send({ message: `Ошибка сервера при поиске пользователя: ${err.message}` });
     });
 };
 
@@ -52,10 +47,7 @@ const getAllUsers = (req, res) => {
         res.status(err.codeStatus).send({ message: err.message });
         return;
       }
-      if (err) {
-        res.status(500).send({ message: `Ошибка сервера при получении списка пользователей: ${err.message}` });
-        return;
-      }
+      res.status(500).send({ message: `Ошибка сервера при получении списка пользователей: ${err.message}` });
     });
 };
 
@@ -80,10 +72,7 @@ const updateUserProfile = (req, res) => {
         res.status(400).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
         return;
       }
-      if (err) {
-        res.status(500).send({ message: `Ошибка обновления данных профиля: ${err.message}` });
-        return;
-      }
+      res.status(500).send({ message: `Ошибка обновления данных профиля: ${err.message}` });
     });
 };
 
@@ -108,10 +97,7 @@ const updateUserAvatar = (req, res) => {
         res.status(400).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
         return;
       }
-      if (err) {
-        res.status(500).send({ message: `Ошибка сервера при обновлении аватара пользователя: ${err.message}` });
-        return;
-      }
+      res.status(500).send({ message: `Ошибка сервера при обновлении аватара пользователя: ${err.message}` });
     });
 };
 
