@@ -11,7 +11,7 @@ const createUser = (req, res) => {
         res.status(400).send({ message: `Переданы некорректные данные при создании пользователя. ${err.message}` });
         return;
       }
-      res.status(500).send({ message: `Ошибка при создании пользователя: ${err.message}` });
+      res.status(500).send({ message: `Ошибка при создании пользователя. ${err.message}` });
     });
 };
 
@@ -31,10 +31,10 @@ const getUserById = (req, res) => {
         return;
       }
       if (err.name === 'CastError') {
-        res.status(400).send({ message: `Переданы некорректные данные при поиске пользователя по _id: ${err.message}` });
+        res.status(400).send({ message: `Переданы некорректные данные при поиске пользователя по _id. ${err.message}` });
         return;
       }
-      res.status(500).send({ message: `Ошибка сервера при поиске пользователя: ${err.message}` });
+      res.status(500).send({ message: `Ошибка сервера при поиске пользователя. ${err.message}` });
     });
 };
 
@@ -43,11 +43,11 @@ const getAllUsers = (req, res) => {
     .find()
     .then((users) => res.status(200).send(users))
     .catch((err) => {
-      if (err.name === 'ServerError') {
-        res.status(err.codeStatus).send({ message: err.message });
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: `Переданы некорректные данные при получении списка пользователей: ${err.message}` });
         return;
       }
-      res.status(500).send({ message: `Ошибка сервера при получении списка пользователей: ${err.message}` });
+      res.status(500).send({ message: `Ошибка сервера при получении списка пользователей. ${err.message}` });
     });
 };
 
@@ -72,7 +72,7 @@ const updateUserProfile = (req, res) => {
         res.status(400).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
         return;
       }
-      res.status(500).send({ message: `Ошибка обновления данных профиля: ${err.message}` });
+      res.status(500).send({ message: `Ошибка обновления данных профиля. ${err.message}` });
     });
 };
 
@@ -97,7 +97,7 @@ const updateUserAvatar = (req, res) => {
         res.status(400).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
         return;
       }
-      res.status(500).send({ message: `Ошибка сервера при обновлении аватара пользователя: ${err.message}` });
+      res.status(500).send({ message: `Ошибка сервера при обновлении аватара пользователя. ${err.message}` });
     });
 };
 

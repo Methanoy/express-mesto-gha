@@ -33,7 +33,7 @@ const deleteCard = (req, res) => {
         res.status(400).send({ message: `Переданы некорректные данные при удалении карточки. ${err.message}` });
         return;
       }
-      res.status(500).send({ message: `Ошибка сервера при удалении карточки: ${err.message}` });
+      res.status(500).send({ message: `Ошибка сервера при удалении карточки. ${err.message}` });
     });
 };
 
@@ -42,11 +42,11 @@ const getAllCards = (req, res) => {
     .find()
     .then((cards) => res.status(200).send(cards))
     .catch((err) => {
-      if (err.name === 'ServerError') {
-        res.status(err.codeStatus).send({ message: err.message });
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: `Переданы некорректные данные при получении карточек. ${err.message}` });
         return;
       }
-      res.status(500).send({ message: `Ошибка сервера при получении карточек: ${err.message}` });
+      res.status(500).send({ message: `Ошибка сервера при получении карточек. ${err.message}` });
     });
 };
 
@@ -70,7 +70,7 @@ const likeCard = (req, res) => {
         res.status(400).send({ message: `Переданы некорректные данные при добавлении лайка. ${err.message}` });
         return;
       }
-      res.status(500).send({ message: `Ошибка сервера при добавлении лайка карточке: ${err.message}` });
+      res.status(500).send({ message: `Ошибка сервера при добавлении лайка карточке. ${err.message}` });
     });
 };
 
@@ -94,7 +94,7 @@ const dislikeCard = (req, res) => {
         res.status(400).send({ message: `Переданы некорректные данные при удалении лайка. ${err.message}` });
         return;
       }
-      res.status(500).send({ message: `Ошибка сервера при удалении лайка карточки: ${err.message}` });
+      res.status(500).send({ message: `Ошибка сервера при удалении лайка карточки. ${err.message}` });
     });
 };
 
