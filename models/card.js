@@ -20,7 +20,7 @@ const cardSchema = new mongoose.Schema({
     default: Date.now,
   },
   likes: {
-    type: mongoose.ObjectId,
+    type: [mongoose.ObjectId],
   },
 });
 
