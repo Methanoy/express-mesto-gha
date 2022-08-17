@@ -41,13 +41,7 @@ const getAllCards = (req, res) => {
   Card
     .find()
     .then((cards) => res.status(200).send(cards))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(CAST_ERR_CODE).send({ message: `Переданы некорректные данные при получении карточек. ${err.message}` });
-      } else {
-        res.status(SERV_ERR_CODE).send({ message: `Ошибка сервера при получении карточек. ${err.message}` });
-      }
-    });
+    .catch((err) => res.status(SERV_ERR_CODE).send({ message: `Ошибка сервера при получении карточек. ${err.message}` }));
 };
 
 const likeCard = (req, res) => {
