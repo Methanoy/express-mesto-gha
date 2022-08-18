@@ -60,10 +60,8 @@ const updateUserProfile = (req, res) => {
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         res.status(err.codeStatus).send({ message: err.message });
-      } else if (err.name === 'ValidationError') {
+      } else if (err.name === ('ValidationError' || 'CastError')) {
         res.status(VAL_ERR_CODE).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
-      } else if (err.name === 'CastError') {
-        res.status(CAST_ERR_CODE).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
       } else {
         res.status(SERV_ERR_CODE).send({ message: `Ошибка обновления данных профиля. ${err.message}` });
       }
@@ -86,12 +84,10 @@ const updateUserAvatar = (req, res) => {
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         res.status(err.codeStatus).send({ message: err.message });
-      } else if (err.name === 'ValidationError') {
+      } else if (err.name === ('ValidationError' || 'CastError')) {
         res.status(VAL_ERR_CODE).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
-      } else if (err.name === 'CastError') {
-        res.status(CAST_ERR_CODE).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
       } else {
-        res.status(SERV_ERR_CODE).send({ message: `Ошибка сервера при обновлении аватара пользователя. ${err.message}` });
+        res.status(SERV_ERR_CODE).send({ message: `Ошибка сервера при обновлении аватара. ${err.message}` });
       }
     });
 };
