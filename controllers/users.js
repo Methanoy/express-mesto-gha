@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
-const { VAL_ERR_CODE, CAST_ERR_CODE, SERV_ERR_CODE } = require('../utils/errorConstants');
+const { BAD_REQ_ERR_CODE, SERV_ERR_CODE } = require('../utils/errorConstants');
 
 const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
@@ -9,7 +9,7 @@ const createUser = (req, res) => {
     .then((user) => res.status(201).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(VAL_ERR_CODE).send({ message: `Переданы некорректные данные при создании пользователя. ${err.message}` });
+        res.status(BAD_REQ_ERR_CODE).send({ message: `Переданы некорректные данные при создании пользователя. ${err.message}` });
       } else {
         res.status(SERV_ERR_CODE).send({ message: `Ошибка при создании пользователя. ${err.message}` });
       }
@@ -30,7 +30,7 @@ const getUserById = (req, res) => {
       if (err.name === 'NotFoundError') {
         res.status(err.codeStatus).send({ message: err.message });
       } else if (err.name === 'CastError') {
-        res.status(CAST_ERR_CODE).send({ message: `Переданы некорректные данные при поиске пользователя по _id. ${err.message}` });
+        res.status(BAD_REQ_ERR_CODE).send({ message: `Переданы некорректные данные при поиске пользователя по _id. ${err.message}` });
       } else {
         res.status(SERV_ERR_CODE).send({ message: `Ошибка сервера при поиске пользователя. ${err.message}` });
       }
@@ -61,7 +61,7 @@ const updateUserProfile = (req, res) => {
       if (err.name === 'NotFoundError') {
         res.status(err.codeStatus).send({ message: err.message });
       } else if (err.name === ('ValidationError' || 'CastError')) {
-        res.status(VAL_ERR_CODE).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
+        res.status(BAD_REQ_ERR_CODE).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
       } else {
         res.status(SERV_ERR_CODE).send({ message: `Ошибка обновления данных профиля. ${err.message}` });
       }
@@ -85,7 +85,7 @@ const updateUserAvatar = (req, res) => {
       if (err.name === 'NotFoundError') {
         res.status(err.codeStatus).send({ message: err.message });
       } else if (err.name === ('ValidationError' || 'CastError')) {
-        res.status(VAL_ERR_CODE).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
+        res.status(BAD_REQ_ERR_CODE).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
       } else {
         res.status(SERV_ERR_CODE).send({ message: `Ошибка сервера при обновлении аватара. ${err.message}` });
       }
