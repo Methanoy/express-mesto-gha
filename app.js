@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cardsRouter = require('./routes/cards');
 const userRouter = require('./routes/users');
-const NOT_FND_ERR_CODE = require('./utils/errorConstants');
+const { NOT_FND_ERR_CODE } = require('./utils/errorConstants');
 
 const { PORT = 3000 } = process.env;
 
