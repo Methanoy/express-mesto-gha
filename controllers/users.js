@@ -60,7 +60,7 @@ const updateUserProfile = (req, res) => {
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         res.status(err.codeStatus).send({ message: err.message });
-      } else if (err.name === ('ValidationError' || 'CastError')) {
+      } else if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(BAD_REQ_ERR_CODE).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
       } else {
         res.status(SERV_ERR_CODE).send({ message: `Ошибка обновления данных профиля. ${err.message}` });
@@ -84,7 +84,7 @@ const updateUserAvatar = (req, res) => {
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         res.status(err.codeStatus).send({ message: err.message });
-      } else if (err.name === ('ValidationError' || 'CastError')) {
+      } else if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(BAD_REQ_ERR_CODE).send({ message: `Переданы некорректные данные при обновлении профиля. ${err.message}` });
       } else {
         res.status(SERV_ERR_CODE).send({ message: `Ошибка сервера при обновлении аватара. ${err.message}` });
