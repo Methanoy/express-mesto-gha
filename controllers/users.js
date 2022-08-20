@@ -3,9 +3,13 @@ const NotFoundError = require('../errors/NotFoundError');
 const { BAD_REQ_ERR_CODE, SERV_ERR_CODE } = require('../utils/errorConstants');
 
 const createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
+  const {
+    name, about, avatar, password, email,
+  } = req.body;
   User
-    .create({ name, about, avatar })
+    .create({
+      name, about, avatar, password, email,
+    })
     .then((user) => res.status(201).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
