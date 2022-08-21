@@ -22,6 +22,33 @@ const createUser = (req, res) => {
     });
 };
 
+const login = (req, res) => {
+  const { email, password } = req.params.body;
+  User
+    .findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return Promise.reject(new Error('Неправильная почта или пароль.'));
+      }
+      return bcrypt.compare(password, user.password);
+    })
+    .then((matched) => {
+      if (!matched) {
+        return Promise.reject(new Error('Неправильная почта или пароль.'));
+      }
+      return res.send({ message: 'Все верно!' });
+    })
+    .catch((err) => {
+      if (err.name === 'Error') {
+        res.status(401).send({ message: err.message });
+      } else if (err.name === 'CastError') {
+        res.status(BAD_REQ_ERR_CODE).send({ message: `Переданы некорректные данные при аутентификации пользователя. ${err.message}` });
+      } else {
+        res.status(SERV_ERR_CODE).send({ message: `Ошибка сервера при аутентификации пользователя. ${err.message}` });
+      }
+    });
+};
+
 const getUserById = (req, res) => {
   User
     .findById(req.params.userId)
@@ -99,5 +126,5 @@ const updateUserAvatar = (req, res) => {
 };
 
 module.exports = {
-  createUser, getUserById, getAllUsers, updateUserProfile, updateUserAvatar,
+  createUser, login, getUserById, getAllUsers, updateUserProfile, updateUserAvatar,
 };
