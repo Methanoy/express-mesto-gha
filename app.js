@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const cardsRouter = require('./routes/cards');
 const userRouter = require('./routes/users');
 const { NOT_FND_ERR_CODE } = require('./utils/errorConstants');
+const { createUser, login } = require('./controllers/users');
+const auth = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 
@@ -12,6 +14,11 @@ const app = express();
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(express.json());
+
+app.post('/signup', createUser);
+app.post('/signin', login);
+
+app.use(auth);
 
 app.use((req, res, next) => {
   req.user = {
