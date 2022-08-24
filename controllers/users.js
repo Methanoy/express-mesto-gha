@@ -30,13 +30,21 @@ const login = (req, res) => {
   User
     .findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-        { expiresIn: '7d' },
-      );
+      if (!user) {
+        throw new Error('Переданы некорректные данные при авторизации пользователя.');
+      } else {
+        const token = jwt.sign(
+          { _id: user._id },
+          NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+          { expiresIn: '7d' },
+        );
 
-      res.send({ token });
+        res.cookie('jwt', token, {
+          maxAge: 3600000,
+          httpOnly: true,
+        })
+          .send({ token });
+      }
     })
     .catch((err) => {
       if (err.name === 'Error') {
