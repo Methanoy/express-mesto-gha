@@ -4,7 +4,7 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const { BAD_REQ_ERR_CODE, SERV_ERR_CODE } = require('../utils/errorConstants');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { JWT_SECRET } = process.env;
 
 const createUser = (req, res) => {
   const {
@@ -26,7 +26,7 @@ const createUser = (req, res) => {
 };
 
 const login = (req, res) => {
-  const { email, password } = req.params.body;
+  const { email, password } = req.body;
   User
     .findUserByCredentials(email, password)
     .then((user) => {
@@ -35,7 +35,7 @@ const login = (req, res) => {
       } else {
         const token = jwt.sign(
           { _id: user._id },
-          NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+          JWT_SECRET,
           { expiresIn: '7d' },
         );
 
@@ -43,7 +43,7 @@ const login = (req, res) => {
           maxAge: 3600000,
           httpOnly: true,
         })
-          .send({ token });
+          .send({ message: 'Вы успешно авторизовались.' });
       }
     })
     .catch((err) => {
@@ -56,6 +56,10 @@ const login = (req, res) => {
       }
     });
 };
+
+// const getCurrentUserData = (req, res) => {
+
+// };
 
 const getUserById = (req, res) => {
   User
@@ -134,5 +138,11 @@ const updateUserAvatar = (req, res) => {
 };
 
 module.exports = {
-  createUser, login, getUserById, getAllUsers, updateUserProfile, updateUserAvatar,
+  createUser,
+  login,
+  getUserById,
+  getAllUsers,
+  updateUserProfile,
+  updateUserAvatar,
+  // getCurrentUserData,
 };
