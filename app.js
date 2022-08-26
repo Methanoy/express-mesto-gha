@@ -20,7 +20,7 @@ app.use(cookieParser());
 app.post('/signin', login);
 app.post('/signup', createUser);
 
-app.use(auth);
+// app.use(auth);
 
 // app.use((req, res, next) => {
 //   req.user = {
@@ -29,8 +29,8 @@ app.use(auth);
 //   next();
 // });
 
-app.use('/users', userRouter);
-app.use('/cards', cardsRouter);
+app.use('/users', auth, userRouter);
+app.use('/cards', auth, cardsRouter);
 app.use('*', (req, res) => res.status(NOT_FND_ERR_CODE).send({ message: 'Указан неправильный путь.' }));
 
 app.listen(PORT, () => {

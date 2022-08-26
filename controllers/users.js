@@ -4,7 +4,7 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const { BAD_REQ_ERR_CODE, SERV_ERR_CODE } = require('../utils/errorConstants');
 
-const { JWT_SECRET } = process.env;
+// const { JWT_SECRET } = process.env;
 
 const createUser = (req, res) => {
   const {
@@ -35,13 +35,14 @@ const login = (req, res) => {
       } else {
         const token = jwt.sign(
           { _id: user._id },
-          JWT_SECRET,
+          'dev-secret',
           { expiresIn: '7d' },
         );
 
         res.cookie('jwt', token, {
           maxAge: 3600000,
           httpOnly: true,
+          sameSite: true,
         })
           .send({ message: 'Вы успешно авторизовались.' });
       }
