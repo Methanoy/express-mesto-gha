@@ -58,9 +58,26 @@ const login = (req, res) => {
     });
 };
 
-// const getCurrentUserData = (req, res) => {
-
-// };
+const getCurrentUserData = (req, res) => {
+  User
+    .findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь по указанному _id не найден.');
+      } else {
+        res.status(200).send({ data: user });
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'NotFoundError') {
+        res.status(err.codeStatus).send({ message: err.message });
+      } else if (err.name === 'CastError') {
+        res.status(BAD_REQ_ERR_CODE).send({ message: `Переданы некорректные данные при поиске пользователя по _id. ${err.message}` });
+      } else {
+        res.status(SERV_ERR_CODE).send({ message: `Ошибка сервера при поиске пользователя. ${err.message}` });
+      }
+    });
+};
 
 const getUserById = (req, res) => {
   User
@@ -69,7 +86,7 @@ const getUserById = (req, res) => {
       if (!user) {
         throw new NotFoundError('Пользователь по указанному _id не найден.');
       } else {
-        res.status(200).send(user);
+        res.status(200).send({ user });
       }
     })
     .catch((err) => {
@@ -145,5 +162,5 @@ module.exports = {
   getAllUsers,
   updateUserProfile,
   updateUserAvatar,
-  // getCurrentUserData,
+  getCurrentUserData,
 };
