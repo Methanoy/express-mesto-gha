@@ -4,7 +4,7 @@ class UnauthorizedError extends Error {
   constructor(message) {
     super(message);
     this.name = 'UnauthorizedError';
-    this.codeStatus = UNFRZ_ERR_CODE;
+    this.statusCode = UNFRZ_ERR_CODE;
   }
 }
 

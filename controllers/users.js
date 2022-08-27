@@ -1,12 +1,16 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const BadRequestError = require('../errors/BadRequestError');
+// const UnauthorizedError = require('../errors/UnauthorizedError');
+// const ForbiddenError = require('../errors/ForbiddenError');
 const NotFoundError = require('../errors/NotFoundError');
+const ConflictError = require('../errors/ConflictError');
 const { BAD_REQ_ERR_CODE, SERV_ERR_CODE } = require('../utils/errorConstants');
 
 // const { JWT_SECRET } = process.env;
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const {
     name, about, avatar, password, email,
   } = req.body;
@@ -15,6 +19,13 @@ const createUser = (req, res) => {
       .create({
         name, about, avatar, password: hash, email,
       }))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        throw new BadRequestError({ message: 'Переданы некорректные данные при создании пользователя.' });
+      } else if (err.code === 11000) {
+        throw new ConflictError({ message: 'Пользователь с аналогичным email уже зарегистрирован.' });
+      }
+    })
     .then((user) => res.status(201).send(
       {
         data: {
@@ -25,13 +36,7 @@ const createUser = (req, res) => {
         },
       },
     ))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(BAD_REQ_ERR_CODE).send({ message: `Переданы некорректные данные при создании пользователя. ${err.message}` });
-      } else {
-        res.status(SERV_ERR_CODE).send({ message: `Ошибка при создании пользователя. ${err.message}` });
-      }
-    });
+    .catch(next);
 };
 
 const login = (req, res) => {
