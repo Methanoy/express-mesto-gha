@@ -33,6 +33,20 @@ app.use('/users', auth, userRouter);
 app.use('/cards', auth, cardsRouter);
 app.use('*', (req, res) => res.status(NOT_FND_ERR_CODE).send({ message: 'Указан неправильный путь.' }));
 
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+
+  res
+    .status(statusCode)
+    .send({
+      message: statusCode === 500
+        ? 'Упс, на сервере произошла ошибка. Простите :('
+        : message,
+    });
+
+  next();
+});
+
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
