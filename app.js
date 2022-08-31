@@ -13,7 +13,7 @@ const { NOT_FND_ERR_CODE } = require('./utils/errorConstants');
 /* контроллеры */
 const { createUser, login } = require('./controllers/users');
 /* миддлвары */
-const { validationLogin, validationCreateUser } = require('./middlewares/inputDataValidation');
+const { validateLogin, validateCreateUser } = require('./middlewares/inputDataValidation');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
 
@@ -27,8 +27,8 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());
 
-app.post('/signin', validationLogin, login);
-app.post('/signup', validationCreateUser, createUser);
+app.post('/signin', validateLogin, login);
+app.post('/signup', validateCreateUser, createUser);
 
 app.use('/users', auth, userRouter);
 app.use('/cards', auth, cardsRouter);
