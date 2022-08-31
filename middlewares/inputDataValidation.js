@@ -1,6 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
-
-const urlRegEx = /[-a-zA-Z0-9@:%_+.~#?&/=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&/=]*)?/i;
+const urlRegExp = require('../utils/regExpConstant');
 
 /* Валидация ID */
 
@@ -23,7 +22,7 @@ const validateCreateUser = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     about: Joi.string().required().min(2).max(30),
-    avatar: Joi.string().required().pattern(urlRegEx),
+    avatar: Joi.string().required().pattern(urlRegExp),
     email: Joi.string().required().email(),
     password: Joi.string().required().min(4),
   }),
@@ -38,7 +37,7 @@ const validateUpdateUserProfile = celebrate({
 
 const validateUpdateUserAvatar = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().pattern(urlRegEx),
+    avatar: Joi.string().required().pattern(urlRegExp),
   }),
 });
 
@@ -47,7 +46,7 @@ const validateUpdateUserAvatar = celebrate({
 const validateCreateCard = celebrate({
   body: Joi.object.keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().pattern(urlRegEx),
+    link: Joi.string().required().pattern(urlRegExp),
   }),
 });
 
