@@ -1,22 +1,23 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/NotFoundError');
-const { BAD_REQ_ERR_CODE, SERV_ERR_CODE } = require('../utils/errorConstants');
+const BadRequestError = require('../errors/BadRequestError');
+const ForbiddenError = require('../errors/ForbiddenError');
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card
     .create({ name, link, owner: req.user._id })
     .then((card) => res.status(201).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(BAD_REQ_ERR_CODE).send({ message: `Переданы некорректные данные при создании карточки. ${err.message}` });
+        next(new BadRequestError('Переданы некорректные данные при создании карточки.'));
       } else {
-        res.status(SERV_ERR_CODE).send({ message: `Ошибка сервера при создании карточки: ${err.message}` });
+        next(err);
       }
     });
 };
 
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
   Card
     .findById(cardId)
@@ -24,7 +25,7 @@ const deleteCard = (req, res) => {
       if (!card) {
         throw new NotFoundError('Карточка с указанным _id не найдена.');
       } else if (card.owner.toString() !== req.user._id) {
-        throw new Error('Вы не можете удалить чужую карточку.');
+        throw new ForbiddenError('Вы не можете удалить чужую карточку.');
       } else {
         Card
           .findByIdAndRemove(cardId)
@@ -34,24 +35,22 @@ const deleteCard = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'NotFoundError') {
-        res.status(err.codeStatus).send({ message: err.message });
-      } else if (err.name === 'CastError') {
-        res.status(BAD_REQ_ERR_CODE).send({ message: `Переданы некорректные данные при удалении карточки. ${err.message}` });
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Переданы некорректные данные при удалении карточки.'));
       } else {
-        res.status(SERV_ERR_CODE).send({ message: `Ошибка сервера при удалении карточки. ${err.message}` });
+        next(err);
       }
     });
 };
 
-const getAllCards = (req, res) => {
+const getAllCards = (req, res, next) => {
   Card
-    .find()
+    .find({})
     .then((cards) => res.status(200).send(cards))
-    .catch((err) => res.status(SERV_ERR_CODE).send({ message: `Ошибка сервера при получении карточек. ${err.message}` }));
+    .catch(next);
 };
 
-const likeCard = (req, res) => {
+const likeCard = (req, res, next) => {
   Card
     .findByIdAndUpdate(req.params.cardId, {
       $addToSet: { likes: req.user._id },
@@ -64,17 +63,15 @@ const likeCard = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'NotFoundError') {
-        res.status(err.codeStatus).send({ message: err.message });
-      } else if (err.name === 'CastError') {
-        res.status(BAD_REQ_ERR_CODE).send({ message: `Переданы некорректные данные при добавлении лайка. ${err.message}` });
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Переданы некорректные данные при удалении карточки.'));
       } else {
-        res.status(SERV_ERR_CODE).send({ message: `Ошибка сервера при добавлении лайка карточке. ${err.message}` });
+        next(err);
       }
     });
 };
 
-const dislikeCard = (req, res) => {
+const dislikeCard = (req, res, next) => {
   Card
     .findByIdAndUpdate(req.params.cardId, {
       $pull: { likes: req.user._id },
@@ -87,12 +84,10 @@ const dislikeCard = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'NotFoundError') {
-        res.status(err.codeStatus).send({ message: err.message });
-      } else if (err.name === 'CastError') {
-        res.status(BAD_REQ_ERR_CODE).send({ message: `Переданы некорректные данные при удалении лайка. ${err.message}` });
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Переданы некорректные данные при удалении карточки.'));
       } else {
-        res.status(SERV_ERR_CODE).send({ message: `Ошибка сервера при удалении лайка карточки. ${err.message}` });
+        next(err);
       }
     });
 };
