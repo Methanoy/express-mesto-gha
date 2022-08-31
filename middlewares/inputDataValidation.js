@@ -5,7 +5,7 @@ const urlRegExp = require('../utils/regExpConstant');
 
 const validateId = celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().hex().length(24).alphanum(),
+    id: Joi.string().hex().length(24).alphanum(),
   }),
 });
 
