@@ -53,13 +53,7 @@ const login = (req, res, next) => {
       })
         .send({ message: 'Вы успешно авторизовались.' });
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные при авторизации пользователя.'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 const getCurrentUserData = (req, res, next) => {
@@ -72,13 +66,7 @@ const getCurrentUserData = (req, res, next) => {
         res.status(200).send({ data: user });
       }
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные при запросе информации о пользователе.'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 const getUserById = (req, res, next) => {
