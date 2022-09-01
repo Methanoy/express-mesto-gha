@@ -9,8 +9,8 @@ const rateLimit = require('express-rate-limit');
 /* роутеры */
 const cardsRouter = require('./routes/cards');
 const userRouter = require('./routes/users');
-/* утилиты */
-const { NOT_FND_ERR_CODE } = require('./utils/errorConstants');
+/* ошибки */
+const NotFoundError = require('./errors/NotFoundError');
 /* контроллеры */
 const { createUser, login } = require('./controllers/users');
 /* миддлвары */
@@ -43,7 +43,9 @@ app.get('/signout', (req, res) => {
 
 app.use('/users', auth, userRouter);
 app.use('/cards', auth, cardsRouter);
-app.use('*', (req, res) => res.status(NOT_FND_ERR_CODE).send({ message: 'Указан неправильный путь.' }));
+app.use(() => {
+  throw new NotFoundError('Указан неправильный путь.');
+});
 
 app.use(errors());
 app.use(errorHandler);
