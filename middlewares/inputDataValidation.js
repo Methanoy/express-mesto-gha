@@ -1,5 +1,13 @@
 const { celebrate, Joi } = require('celebrate');
-const urlRegExp = require('../utils/regExpConstant');
+const validator = require('validator');
+const BadRequestError = require('../errors/BadRequestError');
+
+const validateUrl = (value) => {
+  if (!validator.isURL(value)) {
+    throw new BadRequestError('Передан некорректный адрес URL');
+  }
+  return value;
+};
 
 /* Валидация ID */
 
@@ -22,7 +30,7 @@ const validateCreateUser = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(urlRegExp),
+    avatar: Joi.string().custom(validateUrl),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
@@ -37,7 +45,7 @@ const validateUpdateUserProfile = celebrate({
 
 const validateUpdateUserAvatar = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().pattern(urlRegExp),
+    avatar: Joi.string().required().custom(validateUrl),
   }),
 });
 
@@ -46,7 +54,7 @@ const validateUpdateUserAvatar = celebrate({
 const validateCreateCard = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().pattern(urlRegExp),
+    link: Joi.string().required().custom(validateUrl),
   }),
 });
 
