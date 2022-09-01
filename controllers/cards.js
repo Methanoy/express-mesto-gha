@@ -30,7 +30,7 @@ const deleteCard = (req, res, next) => {
         Card
           .findByIdAndRemove(id)
           .then((cardToDelete) => {
-            res.status(200).send(cardToDelete);
+            res.send({ cardToDelete });
           });
       }
     })
