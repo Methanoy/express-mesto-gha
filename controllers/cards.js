@@ -64,7 +64,7 @@ const likeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные при удалении карточки.'));
+        next(new BadRequestError('Переданы некорректные данные при добавлении лайка карточке.'));
       } else {
         next(err);
       }
@@ -85,7 +85,7 @@ const dislikeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные при удалении карточки.'));
+        next(new BadRequestError('Переданы некорректные данные при удалении лайка у карточки.'));
       } else {
         next(err);
       }
