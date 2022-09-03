@@ -37,13 +37,13 @@ app.use(express.json());
 
 app.post('/signin', validateLogin, login);
 app.post('/signup', validateCreateUser, createUser);
-app.get('/signout', (req, res) => {
+app.get('/signout', auth, (req, res) => {
   res.clearCookie('jwt').send({ message: 'Выход' });
 });
 
 app.use('/users', auth, userRouter);
 app.use('/cards', auth, cardsRouter);
-app.use(() => {
+app.use(auth, () => {
   throw new NotFoundError('Указан неправильный путь.');
 });
 
