@@ -5,6 +5,8 @@ const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 const createUser = (req, res, next) => {
   const {
     name, about, avatar, password, email,
@@ -42,14 +44,14 @@ const login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        'dev-secret',
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
         { expiresIn: '7d' },
       );
 
       res.cookie('jwt', token, {
-        maxAge: 3600000,
+        maxAge: 3600000 * 24 * 7,
+        secure: false,
         httpOnly: true,
-        sameSite: true,
       })
         .send({ message: 'Вы успешно авторизовались.' });
     })
