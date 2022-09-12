@@ -1,5 +1,8 @@
 const allowedCors = [
   'http://localhost:3010',
+  'https://localhost:3010',
+  'http://methanoy.nomoredomains.sbs',
+  'https://methanoy.nomoredomains.sbs',
 ];
 
 module.exports = (req, res, next) => {
