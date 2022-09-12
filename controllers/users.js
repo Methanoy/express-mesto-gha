@@ -50,7 +50,7 @@ const login = (req, res, next) => {
 
       res.cookie('jwt', token, {
         maxAge: 3600000 * 24 * 7,
-        secure: false,
+        secure: NODE_ENV === 'production',
         httpOnly: true,
       })
         .send({ message: 'Вы успешно авторизовались.' });
