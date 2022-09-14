@@ -13,7 +13,7 @@ const userRouter = require('./routes/users');
 /* ошибки */
 const NotFoundError = require('./errors/NotFoundError');
 /* контроллеры */
-const { createUser, login } = require('./controllers/users');
+const { createUser, login, logout } = require('./controllers/users');
 /* миддлвары */
 const { validateLogin, validateCreateUser } = require('./middlewares/inputDataValidation');
 const auth = require('./middlewares/auth');
@@ -46,9 +46,7 @@ app.get('/crash-test', () => {
 
 app.post('/signin', validateLogin, login);
 app.post('/signup', validateCreateUser, createUser);
-app.get('/signout', auth, (req, res) => {
-  res.clearCookie('jwt').send({ message: 'Выход' });
-});
+app.get('/signout', auth, logout);
 
 app.use('/users', auth, userRouter);
 app.use('/cards', auth, cardsRouter);
