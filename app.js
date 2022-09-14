@@ -39,6 +39,12 @@ app.use(express.json());
 app.use(requestLogger);
 app.use(corsHandler);
 
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
 app.post('/signin', validateLogin, login);
 app.post('/signup', validateCreateUser, createUser);
 app.get('/signout', auth, logout);
