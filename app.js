@@ -24,21 +24,25 @@ const options = require('./middlewares/corsHandler');
 const { PORT = 3000 } = process.env;
 
 const app = express();
+mongoose.connect('mongodb://localhost:27017/mestodb');
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
 });
 
-app.use('*', cors(options));
 app.use(limiter);
-
-mongoose.connect('mongodb://localhost:27017/mestodb');
-
 app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());
 app.use(requestLogger);
+app.use('*', cors(options));
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.post('/signin', validateLogin, login);
 app.post('/signup', validateCreateUser, createUser);
