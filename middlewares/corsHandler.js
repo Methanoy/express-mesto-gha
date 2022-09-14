@@ -1,15 +1,28 @@
-const options = {
-  origin: [
-    'http://localhost:3010',
-    'https://localhost:3010',
-    'http://methanoy.nomoredomains.sbs',
-    'https://methanoy.nomoredomains.sbs',
-  ],
-  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-  allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
-  credentials: true,
-};
+const allowedCors = [
+  'http://localhost:3010',
+  'https://localhost:3010',
+  'http://methanoy.nomoredomains.sbs',
+  'https://methanoy.nomoredomains.sbs',
+];
 
-module.exports = options;
+module.exports = (req, res, next) => {
+  const { origin } = req.headers;
+  const { method } = req;
+  const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
+  const requestHeaders = req.headers['access-control-request-headers'];
+
+  res.header('Access-Control-Allow-Credentials', true);
+
+  if (allowedCors.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+
+  if (method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
+    res.header('Access-Control-Allow-Headers', requestHeaders);
+
+    return res.end();
+  }
+
+  return next();
+};
