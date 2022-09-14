@@ -58,19 +58,6 @@ const login = (req, res, next) => {
     .catch(next);
 };
 
-const logout = (req, res, next) => {
-  User
-    .findById(req.user._id)
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь по указанному _id не найден.');
-      } else {
-        res.clearCookie('jwt').send({ message: 'Вы успешно завршили сеанс.' });
-      }
-    })
-    .catch(next);
-};
-
 const getCurrentUserData = (req, res, next) => {
   User
     .findById(req.user._id)
@@ -157,7 +144,6 @@ const updateUserAvatar = (req, res, next) => {
 module.exports = {
   createUser,
   login,
-  logout,
   getUserById,
   getAllUsers,
   updateUserProfile,
