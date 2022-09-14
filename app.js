@@ -1,5 +1,6 @@
 require('dotenv').config();
 /* пакетные модули */
+const cors = require('cors');
 const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
@@ -18,7 +19,7 @@ const { validateLogin, validateCreateUser } = require('./middlewares/inputDataVa
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const corsHandler = require('./middlewares/corsHandler');
+const options = require('./middlewares/corsHandler');
 
 const { PORT = 3000 } = process.env;
 
@@ -29,6 +30,7 @@ const limiter = rateLimit({
   max: 100,
 });
 
+app.use('*', cors(options));
 app.use(limiter);
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
@@ -37,7 +39,6 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());
 app.use(requestLogger);
-app.use(corsHandler);
 
 app.post('/signin', validateLogin, login);
 app.post('/signup', validateCreateUser, createUser);
