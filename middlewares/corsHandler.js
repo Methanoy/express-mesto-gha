@@ -1,4 +1,4 @@
-module.exports.corsOptions = {
+const options = {
   origin: [
     'http://localhost:3010',
     'https://localhost:3010',
@@ -11,3 +11,5 @@ module.exports.corsOptions = {
   allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
   credentials: true,
 };
+
+module.exports = options;
