@@ -18,7 +18,7 @@ const { validateLogin, validateCreateUser } = require('./middlewares/inputDataVa
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const corsHandler = require('./middlewares/corsHandler');
+const cors = require('./middlewares/cors');
 
 const { PORT = 3000 } = process.env;
 
@@ -37,7 +37,7 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());
 app.use(requestLogger);
-app.use(corsHandler);
+app.use(cors);
 
 app.post('/signin', validateLogin, login);
 app.post('/signup', validateCreateUser, createUser);
